@@ -1,5 +1,6 @@
 import torch
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 class LinearRegressionModel2D:
@@ -87,11 +88,27 @@ def visualize3D(data_list):
     # Print model variables and loss
     print("W = %s, b = %s, loss = %s" % (model.W, model.b, model.loss(x_train, y_train)))
 
-    plot = plt.axes(projection="3d")
-    plot.plot3D(x_train[:, 0], x_train[:, 1], y_train[:, 0], 'o')
-    plot.set_xlabel(header[0])
-    plot.set_ylabel(header[1])
-    plot.set_zlabel(header[2])
+    x_vector = x_train[:, 0]
+    y_vector = x_train[:, 1]
+    z_vector = y_train[:, 0]
+
+    fig = plt.figure("3D Linear regression")
+
+    plot1 = fig.add_subplot(111, projection='3d')
+    plot1.plot3D(x_vector.numpy(), y_vector.numpy(),
+                 z_vector.numpy(), 'o')
+
+    x = np.linspace(torch.min(x_vector), torch.max(x_vector), 10)
+    y = np.linspace(torch.min(y_vector), torch.max(y_vector), 10)
+
+    X, Y = np.meshgrid(x, y)
+    Z = np.empty([10, 10])
+    for i in range(0, X.shape[0]):
+        for j in range(0, X.shape[1]):
+            Z[i, j] = model.f(torch.tensor(
+                [[X[i, j], Y[i, j]]], dtype=torch.float32)).detach().numpy()
+    plot1.plot_wireframe(X, Y, Z, color="green")
+
     plt.show()
 
 
