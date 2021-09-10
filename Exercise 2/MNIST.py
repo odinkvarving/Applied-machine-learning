@@ -48,6 +48,16 @@ print("W = %s, b = %s, loss = %s, accuracy = %s" % (model.W, model.b, model.loss
 model.W = model.W.detach()
 model.b = model.b.detach()
 
+fig = plt.figure("W after optimalization")
+rows = 2
+colums = 5
 for i in range(10):
-    plt.imsave('W %s .png' % (i), model.W[:, i].reshape(28, 28))
+    fig.add_subplot(rows, colums, i + 1)
+    plt.imshow(model.W[:, i].reshape(28, 28))
+    plt.axis('off')
+    plt.title(i)
+    plt.imsave('W%s.png' % (i), model.W[:, i].reshape(28, 28))
+
+plt.show()
+
 
