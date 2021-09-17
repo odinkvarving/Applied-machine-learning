@@ -37,6 +37,7 @@ class ConvolutionalNeuralNetworkModel(nn.Module):
             nn.MaxPool2d(kernel_size=2),
             nn.Flatten(),
             nn.Linear(64 * 7 * 7, 1024),
+            nn.Flatten(),
             nn.Linear(1024, 10)
         )
 
