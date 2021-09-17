@@ -32,16 +32,17 @@ class ConvolutionalNeuralNetworkModel(nn.Module):
         # Model layers (includes initialized model variables):
         self.logits = nn.Sequential(
             nn.Conv2d(1, 32, kernel_size=5, padding=2),
-            nn.BatchNorm2d(32),
-            nn.MaxPool2d(kernel_size=2),
-            nn.ReLU(inplace=False),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.ReLU(),
+
             nn.Conv2d(32, 64, kernel_size=5, padding=2),
-            nn.BatchNorm2d(64),
-            nn.MaxPool2d(kernel_size=2),
-            nn.ReLU(inplace=False),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.Dropout2d(0.25),
             nn.Flatten(),
+            nn.ReLU(),
+
             nn.Linear(64 * 7 * 7, 1024),
-            nn.Linear(1024, 10),
+            nn.Linear(1024, 10)
         )
 
     # Predictor

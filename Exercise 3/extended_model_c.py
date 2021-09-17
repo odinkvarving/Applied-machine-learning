@@ -35,10 +35,12 @@ class ConvolutionalNeuralNetworkModel(nn.Module):
             nn.BatchNorm2d(32), #Normalizes the input to a layer in the batch, preventing change in layer-distribution for the inputs (stabilizes the learning process)
             nn.MaxPool2d(kernel_size=2),
             nn.ReLU(inplace=False),  #ReLu sets all negative values to 0, which simplifies the model (and therefore also the optimization)
+
             nn.Conv2d(32, 64, kernel_size=5, padding=2),
             nn.BatchNorm2d(64),
             nn.MaxPool2d(kernel_size=2),
             nn.ReLU(inplace=False),
+
             nn.Flatten(),  #Reshapes input into one-dimensional tensor, making it easier to read
             nn.Linear(64 * 7 * 7, 1024),  #Applies linear transformation to incoming data
             nn.Linear(1024, 10),
