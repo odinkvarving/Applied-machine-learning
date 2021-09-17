@@ -33,7 +33,7 @@ class ConvolutionalNeuralNetworkModel(nn.Module):
         self.logits = nn.Sequential(
             nn.Conv2d(1, 32, kernel_size=5, padding=2),
             nn.BatchNorm2d(32), #Normalizes the input to a layer in the batch, preventing change in layer-distribution for the inputs (stabilizes the learning process)
-            nn.MaxPool2d(kernel_size=2),
+            nn.MaxPool2d(kernel_size=2),  #Downsamples feature maps, reducing its size and scaling down numbers of parameters to learn
             nn.ReLU(inplace=False),  #ReLu sets all negative values to 0, which simplifies the model (and therefore also the optimization)
 
             nn.Conv2d(32, 64, kernel_size=5, padding=2),
