@@ -1,13 +1,14 @@
 import torch
 import torch.nn as nn
+import numpy as np
 
 
 class LongShortTermMemoryModel(nn.Module):
-    def __init__(self, encoding_size):
+    def __init__(self, char_encodings_size, emoji_encodings_size):
         super(LongShortTermMemoryModel, self).__init__()
 
-        self.lstm = nn.LSTM(encoding_size, 128)  # 128 is the state size
-        self.dense = nn.Linear(128, encoding_size)  # 128 is the state size
+        self.lstm = nn.LSTM(char_encodings_size, 128)  # 128 is the state size
+        self.dense = nn.Linear(128, emoji_encodings_size)  # 128 is the state size
 
     def reset(self):  # Reset states prior to new input sequence
         zero_state = torch.zeros(1, 1, 128)  # Shape: (number of layers, batch size, state size)
@@ -26,69 +27,127 @@ class LongShortTermMemoryModel(nn.Module):
 
 
 char_encodings = [
-    [1., 0., 0., 0., 0., 0., 0., 0., 0.],  # ' '
-    [0., 1., 0., 0., 0., 0., 0., 0., 0.],  # 'h'
-    [0., 0., 1., 0., 0., 0., 0., 0., 0.],  # 'e'
-    [0., 0., 0., 1., 0., 0., 0., 0., 0.],  # 'l'
-    [0., 0., 0., 0., 1., 0., 0., 0., 0.],  # 'o'
-    [0., 0., 0., 0., 0., 1., 0., 0., 0.],  # 'w'
-    [0., 0., 0., 0., 0., 0., 1., 0., 0.],  # 'r'
-    [0., 0., 0., 0., 0., 0., 0., 1., 0.],  # 'd'
-    [0., 0., 0., 0., 0., 0., 0., 0., 1.],  # '-'
-
-
+    [1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],  # ' '
+    [0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],  # 'h'
+    [0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],  # 'a'
+    [0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0.],  # 't'
+    [0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0.],  # 'r'
+    [0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0.],  # 'c'
+    [0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0.],  # 'f'
+    [0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.],  # 'l'
+    [0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.],  # 'm'
+    [0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.],  # 'p'
+    [0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.],  # 's'
+    [0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.],  # 'o'
+    [0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.],  # 'n'
 ]
-encoding_size = len(char_encodings)
 
-index_to_char = [' ', 'h', 'e', 'l', 'o', 'w', 'r', 'd', '-']
+char_encodings_size = len(char_encodings)
+
+# indexes         '0'  '1'  '2'  '3'  '4'  '5'  '6'  '7'  '8'  '9'  '10' '11' '12'
+index_to_char = [' ', 'h', 'a', 't', 'r', 'c', 'f', 'l', 'm', 'p', 's', 'o', 'n']
+
+hat = [
+    [char_encodings[1]],  # 'h'
+    [char_encodings[2]],  # 'a'
+    [char_encodings[3]],  # 't'
+    [char_encodings[0]],  # ' '
+]
+
+rat = [
+    [char_encodings[4]],  # 'r'
+    [char_encodings[2]],  # 'a'
+    [char_encodings[3]],  # 't'
+    [char_encodings[0]],  # ' '
+]
+
+cat = [
+    [char_encodings[5]],  # 'c'
+    [char_encodings[2]],  # 'a'
+    [char_encodings[3]],  # 't'
+    [char_encodings[0]],  # ' '
+]
+
+flat = [
+    [char_encodings[6]],  # 'f'
+    [char_encodings[7]],  # 'l'
+    [char_encodings[2]],  # 'a'
+    [char_encodings[3]],  # 't'
+]
+
+matt = [
+    [char_encodings[8]],  # 'm'
+    [char_encodings[2]],  # 'a'
+    [char_encodings[3]],  # 't'
+    [char_encodings[3]],  # 't'
+]
+
+cap = [
+    [char_encodings[5]],  # 'c'
+    [char_encodings[2]],  # 'a'
+    [char_encodings[9]],  # 'p'
+    [char_encodings[0]],  # ' '
+]
+
+son = [
+    [char_encodings[10]],  # 's'
+    [char_encodings[11]],  # 'o'
+    [char_encodings[12]],  # 'n'
+    [char_encodings[0]],   # ' '
+]
+
+emoji_encodings = [
+    [1., 0., 0., 0., 0., 0., 0.],  # '🎩'
+    [0., 1., 0., 0., 0., 0., 0.],  # '🐁'
+    [0., 0., 1., 0., 0., 0., 0.],  # '🐈️'
+    [0., 0., 0., 1., 0., 0., 0.],  # '🏢'
+    [0., 0., 0., 0., 1., 0., 0.],  # '👨'
+    [0., 0., 0., 0., 0., 1., 0.],  # '🧢'
+    [0., 0., 0., 0., 0., 0., 1.],  # '👶'
+    ]
+
+emoji_encodings_size = len(emoji_encodings)
+
+index_to_emoji = ['🎩', '🐁', '🐈️', '🏢', '👨', '🧢', '👶']
 
 x_train = torch.tensor([
-    [char_encodings[0]],   # ' '
-    [char_encodings[1]],   # 'h'
-    [char_encodings[2]],   # 'e'
-    [char_encodings[3]],   # 'l'
-    [char_encodings[3]],   # 'l'
-    [char_encodings[4]],   # 'o'
-    [char_encodings[8]],   # '-'
-    [char_encodings[5]],   # 'w'
-    [char_encodings[4]],   # 'o'
-    [char_encodings[6]],   # 'r'
-    [char_encodings[3]],   # 'l'
-    [char_encodings[7]],  # 'd'
-    ])  # ' hello world'
+    [[char_encodings[1]], [char_encodings[2]], [char_encodings[3]], [char_encodings[0]]],     # Matrix for 'hat '
+    [[char_encodings[4]], [char_encodings[2]], [char_encodings[3]], [char_encodings[0]]],     # Matrix for 'rat '
+    [[char_encodings[5]], [char_encodings[2]], [char_encodings[3]], [char_encodings[0]]],     # Matrix for 'cat '
+    [[char_encodings[6]], [char_encodings[7]], [char_encodings[2]], [char_encodings[3]]],     # Matrix for 'flat'
+    [[char_encodings[8]], [char_encodings[2]], [char_encodings[3]], [char_encodings[3]]],     # Matrix for 'matt'
+    [[char_encodings[5]], [char_encodings[2]], [char_encodings[9]], [char_encodings[0]]],     # Matrix for 'cap '
+    [[char_encodings[10]], [char_encodings[11]], [char_encodings[12]], [char_encodings[0]]],  # Matrix for 'son '
+], dtype=torch.float)
 
 y_train = torch.tensor([
-     char_encodings[1],  # 'h'
-     char_encodings[2],  # 'e'
-     char_encodings[3],  # 'l'
-     char_encodings[3],  # 'l'
-     char_encodings[4],  # 'o'
-     char_encodings[8],  # '-'
-     char_encodings[5],  # 'w'
-     char_encodings[4],  # 'o'
-     char_encodings[6],  # 'r'
-     char_encodings[3],  # 'l'
-     char_encodings[7],  # 'd'
-     char_encodings[0],  # ' '
-     ])  # 'hello world '
+    [emoji_encodings[0], emoji_encodings[0], emoji_encodings[0], emoji_encodings[0]],  # Matrix for '🎩'
+    [emoji_encodings[1], emoji_encodings[1], emoji_encodings[1], emoji_encodings[1]],  # Matrix for '🐁'
+    [emoji_encodings[2], emoji_encodings[2], emoji_encodings[2], emoji_encodings[2]],  # Matrix for '🐈'
+    [emoji_encodings[3], emoji_encodings[3], emoji_encodings[3], emoji_encodings[3]],  # Matrix for '🏢'
+    [emoji_encodings[4], emoji_encodings[4], emoji_encodings[4], emoji_encodings[4]],  # Matrix for '👨'
+    [emoji_encodings[5], emoji_encodings[5], emoji_encodings[5], emoji_encodings[5]],  # Matrix for '🧢'
+    [emoji_encodings[6], emoji_encodings[6], emoji_encodings[6], emoji_encodings[6]],  # Matrix for '👶'
+], dtype=torch.float)
 
-model = LongShortTermMemoryModel(encoding_size)
+model = LongShortTermMemoryModel(char_encodings_size, emoji_encodings_size)
 
 optimizer = torch.optim.RMSprop(model.parameters(), 0.005)
-for epoch in range(2000):
-    model.reset()
-    model.loss(x_train, y_train).backward()
-    optimizer.step()
-    optimizer.zero_grad()
-
-    if epoch % 10 == 9:
-        # Generate characters from the initial characters ' h'
+for epoch in range(500):
+    for batch in range(7):  #Using number of words as range (7), so the model will be trained in batches
         model.reset()
-        text = ' h'
-        model.f(torch.tensor([[char_encodings[0]]]))
-        y = model.f(torch.tensor([[char_encodings[1]]]))
-        text += index_to_char[y.argmax(1)]
-        for c in range(50):
-            y = model.f(torch.tensor([[char_encodings[y.argmax(1)]]]))
-            text += index_to_char[y.argmax(1)]
-        print(text)
+        model.loss(x_train[batch], y_train[batch]).backward()
+        optimizer.step()
+        optimizer.zero_grad()
+
+def generate_emoji(string):
+    y = -1
+    model.reset()
+    for i in range(len(string)):
+        char_index = index_to_char.index(string[i])
+        y = model.f(torch.tensor([[char_encodings[char_index]]], dtype=torch.float))
+    print(index_to_emoji[y.argmax(1)])
+
+generate_emoji('rt')
+generate_emoji('rats')
+
