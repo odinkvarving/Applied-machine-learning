@@ -44,57 +44,8 @@ char_encodings = [
 
 char_encodings_size = len(char_encodings)
 
-# indexes         '0'  '1'  '2'  '3'  '4'  '5'  '6'  '7'  '8'  '9'  '10' '11' '12'
+# indexes        '0'  '1'  '2'  '3'  '4'  '5'  '6'  '7'  '8'  '9'  '10' '11' '12'
 index_to_char = [' ', 'h', 'a', 't', 'r', 'c', 'f', 'l', 'm', 'p', 's', 'o', 'n']
-
-hat = [
-    [char_encodings[1]],  # 'h'
-    [char_encodings[2]],  # 'a'
-    [char_encodings[3]],  # 't'
-    [char_encodings[0]],  # ' '
-]
-
-rat = [
-    [char_encodings[4]],  # 'r'
-    [char_encodings[2]],  # 'a'
-    [char_encodings[3]],  # 't'
-    [char_encodings[0]],  # ' '
-]
-
-cat = [
-    [char_encodings[5]],  # 'c'
-    [char_encodings[2]],  # 'a'
-    [char_encodings[3]],  # 't'
-    [char_encodings[0]],  # ' '
-]
-
-flat = [
-    [char_encodings[6]],  # 'f'
-    [char_encodings[7]],  # 'l'
-    [char_encodings[2]],  # 'a'
-    [char_encodings[3]],  # 't'
-]
-
-matt = [
-    [char_encodings[8]],  # 'm'
-    [char_encodings[2]],  # 'a'
-    [char_encodings[3]],  # 't'
-    [char_encodings[3]],  # 't'
-]
-
-cap = [
-    [char_encodings[5]],  # 'c'
-    [char_encodings[2]],  # 'a'
-    [char_encodings[9]],  # 'p'
-    [char_encodings[0]],  # ' '
-]
-
-son = [
-    [char_encodings[10]],  # 's'
-    [char_encodings[11]],  # 'o'
-    [char_encodings[12]],  # 'n'
-    [char_encodings[0]],   # ' '
-]
 
 emoji_encodings = [
     [1., 0., 0., 0., 0., 0., 0.],  # '🎩'
