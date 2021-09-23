@@ -47,6 +47,16 @@ char_encodings_size = len(char_encodings)
 # indexes        '0'  '1'  '2'  '3'  '4'  '5'  '6'  '7'  '8'  '9'  '10' '11' '12'
 index_to_char = [' ', 'h', 'a', 't', 'r', 'c', 'f', 'l', 'm', 'p', 's', 'o', 'n']
 
+x_train = torch.tensor([
+    [[char_encodings[1]], [char_encodings[2]], [char_encodings[3]], [char_encodings[0]]],     # Matrix for 'hat '
+    [[char_encodings[4]], [char_encodings[2]], [char_encodings[3]], [char_encodings[0]]],     # Matrix for 'rat '
+    [[char_encodings[5]], [char_encodings[2]], [char_encodings[3]], [char_encodings[0]]],     # Matrix for 'cat '
+    [[char_encodings[6]], [char_encodings[7]], [char_encodings[2]], [char_encodings[3]]],     # Matrix for 'flat'
+    [[char_encodings[8]], [char_encodings[2]], [char_encodings[3]], [char_encodings[3]]],     # Matrix for 'matt'
+    [[char_encodings[5]], [char_encodings[2]], [char_encodings[9]], [char_encodings[0]]],     # Matrix for 'cap '
+    [[char_encodings[10]], [char_encodings[11]], [char_encodings[12]], [char_encodings[0]]],  # Matrix for 'son '
+], dtype=torch.float)
+
 emoji_encodings = [
     [1., 0., 0., 0., 0., 0., 0.],  # '🎩'
     [0., 1., 0., 0., 0., 0., 0.],  # '🐁'
@@ -60,16 +70,6 @@ emoji_encodings = [
 emoji_encodings_size = len(emoji_encodings)
 
 index_to_emoji = ['🎩', '🐁', '🐈️', '🏢', '👨', '🧢', '👶']
-
-x_train = torch.tensor([
-    [[char_encodings[1]], [char_encodings[2]], [char_encodings[3]], [char_encodings[0]]],     # Matrix for 'hat '
-    [[char_encodings[4]], [char_encodings[2]], [char_encodings[3]], [char_encodings[0]]],     # Matrix for 'rat '
-    [[char_encodings[5]], [char_encodings[2]], [char_encodings[3]], [char_encodings[0]]],     # Matrix for 'cat '
-    [[char_encodings[6]], [char_encodings[7]], [char_encodings[2]], [char_encodings[3]]],     # Matrix for 'flat'
-    [[char_encodings[8]], [char_encodings[2]], [char_encodings[3]], [char_encodings[3]]],     # Matrix for 'matt'
-    [[char_encodings[5]], [char_encodings[2]], [char_encodings[9]], [char_encodings[0]]],     # Matrix for 'cap '
-    [[char_encodings[10]], [char_encodings[11]], [char_encodings[12]], [char_encodings[0]]],  # Matrix for 'son '
-], dtype=torch.float)
 
 y_train = torch.tensor([
     [emoji_encodings[0], emoji_encodings[0], emoji_encodings[0], emoji_encodings[0]],  # Matrix for '🎩'
