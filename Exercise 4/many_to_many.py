@@ -73,8 +73,8 @@ y_train = torch.tensor([
 
 model = LongShortTermMemoryModel(encoding_size)
 
-optimizer = torch.optim.RMSprop(model.parameters(), 0.005)
-for epoch in range(2000):
+optimizer = torch.optim.RMSprop(model.parameters(), 0.0005)
+for epoch in range(3000):
     model.reset()
     model.loss(x_train, y_train).backward()
     optimizer.step()

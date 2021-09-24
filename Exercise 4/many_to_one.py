@@ -1,14 +1,12 @@
 import torch
 import torch.nn as nn
-import numpy as np
-
 
 class LongShortTermMemoryModel(nn.Module):
-    def __init__(self, char_encodings_size, emoji_encodings_size):
+    def __init__(self, char_encodings_size):
         super(LongShortTermMemoryModel, self).__init__()
 
         self.lstm = nn.LSTM(char_encodings_size, 128)  # 128 is the state size
-        self.dense = nn.Linear(128, emoji_encodings_size)  # 128 is the state size
+        self.dense = nn.Linear(128, char_encodings_size)  # 128 is the state size
 
     def reset(self):  # Reset states prior to new input sequence
         zero_state = torch.zeros(1, 1, 128)  # Shape: (number of layers, batch size, state size)
@@ -35,11 +33,11 @@ char_encodings = [
     [0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0.],  # 'c'
     [0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0.],  # 'f'
     [0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.],  # 'l'
-    [0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.],  # 'm'
-    [0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.],  # 'p'
-    [0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.],  # 's'
-    [0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.],  # 'o'
-    [0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.],  # 'n'
+    [0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0.],  # 'm'
+    [0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0.],  # 'p'
+    [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0.],  # 's'
+    [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0.],  # 'o'
+    [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1.],  # 'n'
 ]
 
 char_encodings_size = len(char_encodings)
@@ -56,9 +54,6 @@ x_train = torch.tensor([
     [[char_encodings[5]], [char_encodings[2]], [char_encodings[9]], [char_encodings[0]]],     # Matrix for 'cap '
     [[char_encodings[10]], [char_encodings[11]], [char_encodings[12]], [char_encodings[0]]],  # Matrix for 'son '
 ], dtype=torch.float)
-
-batches = 7
-x_train_batches = torch.split(x_train, batches)
 
 emoji_encodings = [
     [1., 0., 0., 0., 0., 0., 0.],  # '🎩'
@@ -84,9 +79,7 @@ y_train = torch.tensor([
     [emoji_encodings[6], emoji_encodings[6], emoji_encodings[6], emoji_encodings[6]],  # Matrix for '👶'
 ], dtype=torch.float)
 
-y_train_batches = torch.split(y_train, batches)
-
-model = LongShortTermMemoryModel(char_encodings_size, emoji_encodings_size)
+model = LongShortTermMemoryModel(char_encodings_size)
 
 optimizer = torch.optim.RMSprop(model.parameters(), 0.0005)
 for epoch in range(1000):
@@ -95,6 +88,17 @@ for epoch in range(1000):
         model.loss(x_train[batch], y_train[batch]).backward()
         optimizer.step()
         optimizer.zero_grad()
+
+def find_emoji(text):
+    model.reset()
+    for i in range(len(text)):
+        index = index_to_char.index(text[i])
+        y = model.f(torch.tensor([[char_encodings[index]]]))
+        emoji = index_to_emoji[y.argmax(1)]
+    print(emoji)
+
+find_emoji("rt")
+find_emoji("cats")
 
 
 
