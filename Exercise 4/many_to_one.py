@@ -57,6 +57,9 @@ x_train = torch.tensor([
     [[char_encodings[10]], [char_encodings[11]], [char_encodings[12]], [char_encodings[0]]],  # Matrix for 'son '
 ], dtype=torch.float)
 
+batches = 7
+x_train_batches = torch.split(x_train, batches)
+
 emoji_encodings = [
     [1., 0., 0., 0., 0., 0., 0.],  # '🎩'
     [0., 1., 0., 0., 0., 0., 0.],  # '🐁'
@@ -81,24 +84,17 @@ y_train = torch.tensor([
     [emoji_encodings[6], emoji_encodings[6], emoji_encodings[6], emoji_encodings[6]],  # Matrix for '👶'
 ], dtype=torch.float)
 
+y_train_batches = torch.split(y_train, batches)
+
 model = LongShortTermMemoryModel(char_encodings_size, emoji_encodings_size)
 
-optimizer = torch.optim.RMSprop(model.parameters(), 0.005)
-for epoch in range(500):
+optimizer = torch.optim.RMSprop(model.parameters(), 0.0005)
+for epoch in range(1000):
     for batch in range(7):  #Using number of words as range (7), so the model will be trained in batches
         model.reset()
         model.loss(x_train[batch], y_train[batch]).backward()
         optimizer.step()
         optimizer.zero_grad()
 
-def generate_emoji(string):
-    y = -1
-    model.reset()
-    for i in range(len(string)):
-        char_index = index_to_char.index(string[i])
-        y = model.f(torch.tensor([[char_encodings[char_index]]], dtype=torch.float))
-    print(index_to_emoji[y.argmax(1)])
 
-generate_emoji('rt')
-generate_emoji('rats')
 
