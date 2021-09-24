@@ -48,12 +48,13 @@ x_train = torch.tensor([
     [char_encodings[3]],   # 'l'
     [char_encodings[3]],   # 'l'
     [char_encodings[4]],   # 'o'
-    [char_encodings[8]],   # '-'
+    [char_encodings[0]],   # ' '
     [char_encodings[5]],   # 'w'
     [char_encodings[4]],   # 'o'
     [char_encodings[6]],   # 'r'
     [char_encodings[3]],   # 'l'
     [char_encodings[7]],   # 'd'
+    [char_encodings[0]]
     ])  # ' hello world'
 
 y_train = torch.tensor([
@@ -62,13 +63,14 @@ y_train = torch.tensor([
      char_encodings[3],  # 'l'
      char_encodings[3],  # 'l'
      char_encodings[4],  # 'o'
-     char_encodings[8],  # '-'
+     char_encodings[0],  # '-'
      char_encodings[5],  # 'w'
      char_encodings[4],  # 'o'
      char_encodings[6],  # 'r'
      char_encodings[3],  # 'l'
      char_encodings[7],  # 'd'
      char_encodings[0],  # ' '
+     char_encodings[1]
      ])  # 'hello world '
 
 model = LongShortTermMemoryModel(encoding_size)

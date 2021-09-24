@@ -97,8 +97,8 @@ def find_emoji(text):
         emoji = index_to_emoji[y.argmax(1)]
     print(emoji)
 
-find_emoji("rt")
 find_emoji("cats")
+find_emoji("nnnn")
 
 
 
